@@ -1,5 +1,7 @@
 import { CircularProgress, Divider, IconButton, Paper, Stack, TextField } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import SearchIcon from '@mui/icons-material/Search';
+import Box from '@mui/material/Box';
 
 import React, { useEffect, useState } from 'react'
 import { Shelter } from '../../model/shelter'
@@ -28,6 +30,10 @@ const AdopterDefault = () => {
 
   const handleClickViewApplications = () => {
     navigate('applications')
+  }
+
+  const handleClickShelterSearch = () => {
+    navigate('/shelter-search');
   }
 
   const onClickOnPet = (id:number) => {
@@ -75,7 +81,7 @@ const AdopterDefault = () => {
   
   return (
     <div>
-      <Stack sx={{margin:1}} width={"100%"} spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap">
+      <Stack sx={{margin:1}} width={"100%"} spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap" alignItems="center">
           <IconButton
               sx={{m:0.2}}
               edge="end"
@@ -96,6 +102,18 @@ const AdopterDefault = () => {
             value={shelterFilter}
             onChange={(e) => setShelterFilter(e.target.value)}
           />
+          <Box sx={{ flexGrow: 1 }} />
+          <IconButton
+              sx={{m:0.2}}
+              edge="end"
+              color="inherit"
+              aria-label="shelter-search"
+              size='medium'
+              onClick={handleClickShelterSearch}
+            >
+              <SearchIcon />
+              {'Shelter Search'}
+          </IconButton>
         </Stack>
         
         <Stack width={"100%"} spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap">

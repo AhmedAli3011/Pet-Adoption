@@ -48,4 +48,20 @@ public class ShelterController {
         shelterResponse.setMessage("Shelter got successfully");
         return new ResponseEntity<>(shelterResponse, HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> shelterSearch(
+            @RequestParam(value = "sheltername", required = false) String shelterName,
+            @RequestParam(value = "size", required = false, defaultValue = "5") int size,
+            @RequestParam(value = "offset", required = false, defaultValue = "0") int offset
+    ) {
+        // Fetch only the required page from the database
+        java.util.List<Shelter> paged;
+        if (shelterName != null && !shelterName.isEmpty()) {
+            paged = shelterService.findSheltersByNameContainingPaged(shelterName, size, offset);
+        } else {
+            paged = shelterService.getAllSheltersPaged(size, offset);
+        }
+        return new ResponseEntity<>(paged, HttpStatus.OK);
+    }
 }

@@ -22,6 +22,7 @@ import Applications from "./pages/staff/Applications";
 import AdopterApplications from "./pages/adopter/AdopterApplications";
 import PetEdit from "./pages/staff/PetEdit";
 import PetDetails from "./pages/adopter/PetDetails";
+import ShelterSearch from './pages/ShelterSearch';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -62,6 +63,7 @@ const router = createBrowserRouter(
 
       {/* Set default routing as log in page*/}
       <Route path="/" element={<Auth />} />
+      <Route path="/shelter-search" element={<ShelterSearch />} />
       
       {/* 404 page - render this when no other routes match */}
       <Route path="*" element={<PageNotFound />} />
