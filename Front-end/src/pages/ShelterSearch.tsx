@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Paper, Stack, TextField, Typography, CircularProgress, Box, Button, IconButton, Drawer, Divider } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Paper, Stack, TextField, Typography, CircularProgress, Box, Button, IconButton } from '@mui/material';
 import CustomAppBar from '../components/AppBar';
-import CloseIcon from '@mui/icons-material/Close';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import { useNavigate } from 'react-router-dom';
 
 // Mock data for fallback/demo
 const mockShelters = [
@@ -22,16 +22,10 @@ const ShelterSearch: React.FC = () => {
   const [search, setSearch] = useState('');
   const [shelters, setShelters] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [chatOpen, setChatOpen] = useState(false);
-  const [chatShelter, setChatShelter] = useState<any>(null);
-  const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
-  const [input, setInput] = useState('');
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [offset, setOffset] = useState(0);
-  const chatBottomRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
     setOffset(0);
   }, [search]);
 
@@ -63,34 +57,8 @@ const ShelterSearch: React.FC = () => {
   }, [search, offset]);
 
   const handleOpenChat = (shelter: any) => {
-    setChatShelter(shelter);
-    setChatOpen(true);
-    setMessages([
-      { sender: 'shelter', text: `Welcome to ${shelter.name}! How can we help you?` }
-    ]);
-    setInput('');
-  };
-
-  const handleCloseChat = () => {
-    setChatOpen(false);
-    setChatShelter(null);
-    setMessages([]);
-  };
-
-  const handleSend = () => {
-    if (input.trim() === '') return;
-    setMessages(prev => [
-      ...prev,
-      { sender: 'me', text: input }
-    ]);
-    setInput('');
-    // Optionally, simulate a reply after a delay
-    setTimeout(() => {
-      setMessages(prev => [
-        ...prev,
-        { sender: 'shelter', text: 'Thank you for your message! We will get back to you soon.' }
-      ]);
-    }, 1000);
+    // Navigate to Chatting page with shelter info (e.g., via state or params)
+    navigate('/staff/chatting', { state: { shelter } });
   };
 
   const handleShowMore = () => {
@@ -100,12 +68,6 @@ const ShelterSearch: React.FC = () => {
   const handleShowLess = () => {
     setOffset(prev => Math.max(0, prev - PAGE_SIZE));
   };
-
-  useEffect(() => {
-    if (chatOpen && chatBottomRef.current) {
-      chatBottomRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages, chatOpen]);
 
   return (
     <>
@@ -167,67 +129,7 @@ const ShelterSearch: React.FC = () => {
           </>
         )}
       </Paper>
-      <Drawer
-        anchor="right"
-        open={chatOpen}
-        onClose={handleCloseChat}
-        PaperProps={{
-          sx: { width: 350, display: 'flex', flexDirection: 'column', height: '100%' }
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', p: 2, borderBottom: '1px solid #eee' }}>
-          <Typography variant="h6" sx={{ flex: 1 }}>
-            Chat with {chatShelter?.name}
-          </Typography>
-          <IconButton onClick={handleCloseChat}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-        <Divider />
-        <Box sx={{ flex: 1, overflowY: 'auto', p: 2, bgcolor: '#f5f5f5' }}>
-          {messages.map((msg, idx) => (
-            <Box
-              key={idx}
-              sx={{
-                display: 'flex',
-                justifyContent: msg.sender === 'me' ? 'flex-end' : 'flex-start',
-                mb: 1
-              }}
-            >
-              <Box
-                sx={{
-                  bgcolor: msg.sender === 'me' ? '#1976d2' : '#e0e0e0',
-                  color: msg.sender === 'me' ? '#fff' : '#222',
-                  px: 2,
-                  py: 1,
-                  borderRadius: 2,
-                  maxWidth: '80%',
-                  wordBreak: 'break-word'
-                }}
-              >
-                {msg.text}
-              </Box>
-            </Box>
-          ))}
-          <div ref={chatBottomRef} />
-        </Box>
-        <Divider />
-        <Box sx={{ display: 'flex', p: 2, alignItems: 'center' }}>
-          <TextField
-            size="small"
-            placeholder="Type a message..."
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter') handleSend();
-            }}
-            sx={{ flex: 1, mr: 1 }}
-          />
-          <Button variant="contained" onClick={handleSend} disabled={!input.trim()}>
-            Send
-          </Button>
-        </Box>
-      </Drawer>
+      {/* Remove Drawer and chat UI */}
     </>
   );
 };
